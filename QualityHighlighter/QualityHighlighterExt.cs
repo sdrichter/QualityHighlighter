@@ -81,15 +81,6 @@ namespace QualityHighlighter
             _host.MainWindow.RemoveCustomToolBarButton(ToggleBtnCommand);
         }
 
-        public override Image SmallIcon
-        {
-            get
-            {
-                //TODO: Implement.
-                return base.SmallIcon;
-            }
-        }
-
         public override string UpdateUrl
         {
             get
