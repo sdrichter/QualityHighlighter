@@ -94,8 +94,7 @@ namespace QualityHighlighter
         {
             get
             {
-                //TODO: Implement.
-                return base.UpdateUrl;
+                return "https://cdn.rawgit.com/sdrichter/QualityHighlighter/master/VERSION";
             }
         }
         
