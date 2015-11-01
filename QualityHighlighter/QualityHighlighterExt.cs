@@ -100,23 +100,29 @@ namespace QualityHighlighter
             if (command != null && command.Equals(ToggleBtnCommand))
             {
                 _highlightsOn = !_highlightsOn;
+
+                if(!_highlightsOn)
+                {
+                    _host.MainWindow.RefreshEntriesList();
+                }
+
                 _host.MainWindow.UpdateUI(false, null, false, null, true, null, false);
             }
         }
 
         private void MainWindow_UIStateUpdated(object sender, EventArgs e)
         {
-            //This method iterates through all the entries and either highlights
-            //them if highlighting is on, or unhighlights if it is off.
-            ListView lv = (_host.MainWindow.Controls.Find(
-                "m_lvEntries", true)[0] as ListView);
-            if (lv == null) { Debug.Assert(false); return; }
-
-            lv.BeginUpdate();
-
-            foreach (ListViewItem lvi in lv.Items)
+            if (_highlightsOn)
             {
-                if (_highlightsOn)
+                //This method iterates through all the entries and either highlights
+                //them if highlighting is on, or unhighlights if it is off.
+                ListView lv = (_host.MainWindow.Controls.Find(
+                    "m_lvEntries", true)[0] as ListView);
+                if (lv == null) { Debug.Assert(false); return; }
+
+                lv.BeginUpdate();
+
+                foreach (ListViewItem lvi in lv.Items)
                 {
                     PwListItem li = (lvi.Tag as PwListItem);
                     if (li == null) { Debug.Assert(false); continue; }
@@ -140,13 +146,9 @@ namespace QualityHighlighter
                     else
                         lvi.BackColor = VeryStrongColor;
                 }
-                else
-                {
-                    lvi.BackColor = Color.Transparent;
-                }
-            }
 
-            lv.EndUpdate();
+                lv.EndUpdate();
+            }
         }
     }
 }
