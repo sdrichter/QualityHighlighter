@@ -19,6 +19,7 @@ This plugin pairs very well with the QualityColumn plugin available on the KeePa
 QualityHighlighter is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
 Version History:
+
 v1.1: Corrected the toggle option so it retains the alternating background colors that are default in KeePass when toggled off rather than setting them all to transparent.
 
 v1.0: Initial release with basic highlighting functionality and toggle option.
