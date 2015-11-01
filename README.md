@@ -1,6 +1,6 @@
 # QualityHighlighter
 QualityHighlighter plugin for KeePass 2.x.
-Copyright (C) 2015 by Scott Richter <scott.d.richter at gmail.com>
+Copyright (C) 2015 by Scott Richter (scott.d.richter at gmail.com)
 
 QualityHighlighter is a simple plugin for KeePass that highlights entries based on the password quality. Highlighting is done in 5 categories (based on the KeePass website at http://keepass.info/help/kb/pw_quality_est.html) as follows:
 
