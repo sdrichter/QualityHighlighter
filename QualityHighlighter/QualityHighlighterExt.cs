@@ -1,6 +1,6 @@
 ﻿/*
   QualityHighlighter plugin for KeePass 2.x.
-  Copyright (C) 2015 by Scott Richter <scott.d.richter@gmail.com>
+  Copyright (C) 2016 by Scott Richter <scott.d.richter@gmail.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 using KeePass.Ecas;
 using KeePass.Plugins;
 using KeePass.UI;
+using KeePass.Util.Spr;
 using KeePassLib;
 using KeePassLib.Cryptography;
 using KeePassLib.Security;
@@ -40,6 +41,11 @@ namespace QualityHighlighter
         /// Name of the custom toolbar button to toggle the highlights.
         /// </summary>
         private const string ToggleBtnCommand = "QualityHighlighterToggle";
+
+        /// <summary>
+        /// Name of the config setting for this plugin.
+        /// </summary>
+        private const string CustomConfigName = "QHL_HighlightsOn";
 
         private IPluginHost _host = null;
         private bool _highlightsOn = true;
@@ -64,11 +70,14 @@ namespace QualityHighlighter
             _highlightsOn = true;
 
             _host = host;
+            if (_host == null) { Debug.Assert(false); }
 
             _host.MainWindow.UIStateUpdated += MainWindow_UIStateUpdated;
 
             _host.MainWindow.AddCustomToolBarButton(ToggleBtnCommand, "Toggle Highlights", "Toggle quality level highlights on or off.");
             _host.TriggerSystem.RaisingEvent += TriggerSystem_RaisingEvent;
+
+            _highlightsOn = _host.CustomConfig.GetBool(CustomConfigName, true);
 
             return true;
         }
@@ -79,6 +88,8 @@ namespace QualityHighlighter
             _host.TriggerSystem.RaisingEvent -= TriggerSystem_RaisingEvent;
 
             _host.MainWindow.RemoveCustomToolBarButton(ToggleBtnCommand);
+
+            _host.CustomConfig.SetBool(CustomConfigName, _highlightsOn);
         }
 
         public override string UpdateUrl
@@ -134,6 +145,21 @@ namespace QualityHighlighter
                     if (pStr == null) { Debug.Assert(false); continue; }
 
                     string pw = pStr.ReadString();
+
+                    if (pw.IndexOf('{') >= 0)
+                    {
+                        //It is a reference to another entry.
+                        PwDatabase pd = null;
+                        try
+                        {
+                            pd = _host.MainWindow.DocumentManager.SafeFindContainerOf(pe);
+                        }
+                        catch (Exception) { Debug.Assert(false); }
+
+                        SprContext context = new SprContext(pe, pd, (SprCompileFlags.Deref | SprCompileFlags.TextTransforms), false, false);
+                        pw = SprEngine.Compile(pw, context);
+                    }
+
                     uint bits = QualityEstimation.EstimatePasswordBits(pw.ToCharArray());
                     if (bits <= VeryWeakQualityMax)
                         lvi.BackColor = VeryWeakColor;
