@@ -21,9 +21,13 @@ Future improvement plan is to have an options dialog to customize quality levels
 
 This plugin pairs very well with the QualityColumn plugin available on the KeePass website at http://keepass.info/plugins.html#qcol.
 
+![Example Screenshot](example.png)
+
+## License
+
 QualityHighlighter is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
-Version History:
+## Version History
 
 v1.2: Added saving of highlighting toggle state. It will not persist after closing and reopening KeePass. Fixed issue with highlighting being wrong on entries where the password is a reference to another password.
 
