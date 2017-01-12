@@ -2,13 +2,18 @@
 QualityHighlighter plugin for KeePass 2.x.
 Copyright (C) 2016 by Scott Richter (scott.d.richter at gmail.com)
 
-QualityHighlighter is a simple plugin for KeePass that highlights entries based on the password quality. Highlighting is done in 5 categories (based on the KeePass website at http://keepass.info/help/kb/pw_quality_est.html) as follows:
+Modified by jaege.
 
-1. Very Weak - <= 64 bits - Red
-2. Weak - 64-80 bits - Orange
-3. Moderate - 81-112 bits - Yellow
-4. Strong - 113-128 bits - Yellow-Green
-5. Very Strong - >128 bits - Green
+QualityHighlighter is a simple plugin for KeePass that highlights entries based on the password quality. Highlighting is categorized (based on the KeePass website at http://keepass.info/help/kb/pw_quality_est.html) as follows:
+
+|    Type     | Quality (bit) | Color(Hexcode ARGB) |
+| ----------- | ------------: | ------------------: |
+| No password |             0 |   White(0xFFFFFFFF) |
+| Very Weak   |          1-64 |     Red(0xFFFF0000) |
+| Weak        |         65-80 |        (0xFFFF9933) |
+| Moderate    |        81-112 |        (0xFFFFFF66) |
+| Strong      |       113-128 |        (0xFFCCFF99) |
+| Very Strong |          >128 |        (0xFFCCFFCC) |
 
 The plugin features a button on the KeePass toolbar to toggle the highlights on and off.
 
