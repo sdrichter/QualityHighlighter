@@ -2,6 +2,8 @@
   QualityHighlighter plugin for KeePass 2.x.
   Copyright (C) 2016 by Scott Richter <scott.d.richter@gmail.com>
 
+  Modified by jaege <jaege8@gmail.com>
+
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
@@ -25,6 +27,7 @@ using KeePassLib;
 using KeePassLib.Cryptography;
 using KeePassLib.Security;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
@@ -52,18 +55,14 @@ namespace QualityHighlighter
 
         //Quality classification cutoffs, populated per KeePass website.
         //In the future, might make these configurable.
-        private const uint VeryWeakQualityMax = 64;
-        private const uint WeakQualityMax = 80;
-        private const uint ModerateQualityMax = 112;
-        private const uint StrongQualityMax = 128;
-
-        //Predefined colors for each quality level.
-        //In the future, might make these configurable.
-        private Color VeryWeakColor = Color.Red;
-        private Color WeakColor = Color.Orange;
-        private Color ModerateColor = Color.Yellow;
-        private Color StrongColor = Color.YellowGreen;
-        private Color VeryStrongColor = Color.Green;
+        private SortedList<uint, Color> QualityDelimiter = new SortedList<uint, Color> {
+            {             0, Color.FromArgb(unchecked((int)0xFFFFFFFF)) },
+            {            64, Color.FromArgb(unchecked((int)0xFFFF0000)) },
+            {            80, Color.FromArgb(unchecked((int)0xFFFF9933)) },
+            {           112, Color.FromArgb(unchecked((int)0xFFFFFF66)) },
+            {           128, Color.FromArgb(unchecked((int)0xFFCCFF99)) },
+            { uint.MaxValue, Color.FromArgb(unchecked((int)0xFFCCFFCC)) },
+        };
 
         public override bool Initialize(IPluginHost host)
         {
@@ -161,16 +160,14 @@ namespace QualityHighlighter
                     }
 
                     uint bits = QualityEstimation.EstimatePasswordBits(pw.ToCharArray());
-                    if (bits <= VeryWeakQualityMax)
-                        lvi.BackColor = VeryWeakColor;
-                    else if (bits <= WeakQualityMax)
-                        lvi.BackColor = WeakColor;
-                    else if (bits <= ModerateQualityMax)
-                        lvi.BackColor = ModerateColor;
-                    else if (bits <= StrongQualityMax)
-                        lvi.BackColor = StrongColor;
-                    else
-                        lvi.BackColor = VeryStrongColor;
+                    foreach(KeyValuePair<uint, Color> kvp in QualityDelimiter)
+                    {
+                        if (bits <= kvp.Key)
+                        {
+                            lvi.BackColor = kvp.Value;
+                            break;
+                        }
+                    }
                 }
 
                 lv.EndUpdate();
