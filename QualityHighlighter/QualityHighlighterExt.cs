@@ -71,7 +71,15 @@ namespace QualityHighlighter
             _host = host;
             if (_host == null) { Debug.Assert(false); }
 
-            _host.MainWindow.UIStateUpdated += MainWindow_UIStateUpdated;
+            ListView lv = (_host.MainWindow.Controls.Find(
+                "m_lvEntries", true)[0] as ListView);
+            if (lv == null) { Debug.Assert(false); return false; }
+
+            //Custom draw the entry list so we can set background color.
+            lv.OwnerDraw = true;
+            lv.DrawItem += Lv_DrawItem;
+            lv.DrawSubItem += Lv_DrawSubItem;
+            lv.DrawColumnHeader += Lv_DrawColumnHeader;
 
             _host.MainWindow.AddCustomToolBarButton(ToggleBtnCommand, "Toggle Highlights", "Toggle quality level highlights on or off.");
             _host.TriggerSystem.RaisingEvent += TriggerSystem_RaisingEvent;
@@ -83,7 +91,20 @@ namespace QualityHighlighter
 
         public override void Terminate()
         {
-            _host.MainWindow.UIStateUpdated -= MainWindow_UIStateUpdated;
+            ListView lv = (_host.MainWindow.Controls.Find(
+                "m_lvEntries", true)[0] as ListView);
+            if (lv == null)
+            {
+                Debug.Assert(false);
+            }
+            else
+            {
+                lv.DrawItem -= Lv_DrawItem;
+                lv.DrawSubItem -= Lv_DrawSubItem;
+                lv.DrawColumnHeader -= Lv_DrawColumnHeader;
+                lv.OwnerDraw = false;
+            }
+
             _host.TriggerSystem.RaisingEvent -= TriggerSystem_RaisingEvent;
 
             _host.MainWindow.RemoveCustomToolBarButton(ToggleBtnCommand);
@@ -130,58 +151,58 @@ namespace QualityHighlighter
             }
         }
 
-        private void MainWindow_UIStateUpdated(object sender, EventArgs e)
+        private void Lv_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
             if (_highlightsOn)
             {
-                //This method iterates through all the entries and either highlights
-                //them if highlighting is on, or unhighlights if it is off.
-                ListView lv = (_host.MainWindow.Controls.Find(
-                    "m_lvEntries", true)[0] as ListView);
-                if (lv == null) { Debug.Assert(false); return; }
+                ListViewItem lvi = e.Item;
+                PwListItem li = (lvi.Tag as PwListItem);
+                if (li == null) { Debug.Assert(false); return; }
 
-                lv.BeginUpdate();
+                PwEntry pe = li.Entry;
+                if (pe == null) { Debug.Assert(false); return; }
 
-                foreach (ListViewItem lvi in lv.Items)
+                ProtectedString pStr = pe.Strings.Get(PwDefs.PasswordField);
+                if (pStr == null) { Debug.Assert(false); return; }
+
+                string pw = pStr.ReadString();
+
+                if (pw.IndexOf('{') >= 0)
                 {
-                    PwListItem li = (lvi.Tag as PwListItem);
-                    if (li == null) { Debug.Assert(false); continue; }
-
-                    PwEntry pe = li.Entry;
-                    if (pe == null) { Debug.Assert(false); continue; }
-
-                    ProtectedString pStr = pe.Strings.Get(PwDefs.PasswordField);
-                    if (pStr == null) { Debug.Assert(false); continue; }
-
-                    string pw = pStr.ReadString();
-
-                    if (pw.IndexOf('{') >= 0)
+                    //It is a reference to another entry.
+                    PwDatabase pd = null;
+                    try
                     {
-                        //It is a reference to another entry.
-                        PwDatabase pd = null;
-                        try
-                        {
-                            pd = _host.MainWindow.DocumentManager.SafeFindContainerOf(pe);
-                        }
-                        catch (Exception) { Debug.Assert(false); }
-
-                        SprContext context = new SprContext(pe, pd, (SprCompileFlags.Deref | SprCompileFlags.TextTransforms), false, false);
-                        pw = SprEngine.Compile(pw, context);
+                        pd = _host.MainWindow.DocumentManager.SafeFindContainerOf(pe);
                     }
+                    catch (Exception) { Debug.Assert(false); }
 
-                    uint bits = QualityEstimation.EstimatePasswordBits(pw.ToCharArray());
-                    foreach(KeyValuePair<uint, Color> kvp in QualityDelimiter)
-                    {
-                        if (bits <= kvp.Key)
-                        {
-                            lvi.BackColor = kvp.Value;
-                            break;
-                        }
-                    }
+                    SprContext context = new SprContext(pe, pd, (SprCompileFlags.Deref | SprCompileFlags.TextTransforms), false, false);
+                    pw = SprEngine.Compile(pw, context);
                 }
 
-                lv.EndUpdate();
+                uint bits = QualityEstimation.EstimatePasswordBits(pw.ToCharArray());
+                foreach (KeyValuePair<uint, Color> kvp in QualityDelimiter)
+                {
+                    if (bits <= kvp.Key)
+                    {
+                        lvi.BackColor = kvp.Value;
+                        break;
+                    }
+                }
             }
+
+            e.DrawDefault = true;
+        }
+
+        private void Lv_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
+        {
+            e.DrawDefault = true;
+        }
+
+        private void Lv_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
+        {
+            e.DrawDefault = true;
         }
     }
 }
