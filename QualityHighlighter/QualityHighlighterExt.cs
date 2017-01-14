@@ -116,7 +116,7 @@ namespace QualityHighlighter
         {
             get
             {
-                return "https://cdn.rawgit.com/sdrichter/QualityHighlighter/master/VERSION";
+                return "https://rawgit.com/sdrichter/QualityHighlighter/master/VERSION";
             }
         }
         
