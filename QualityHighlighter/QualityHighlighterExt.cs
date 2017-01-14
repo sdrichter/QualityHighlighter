@@ -111,12 +111,22 @@ namespace QualityHighlighter
             {
                 _highlightsOn = !_highlightsOn;
 
-                if(!_highlightsOn)
+                //Save the scrollbar state so we can restore it.
+                ListView lv = (_host.MainWindow.Controls.Find(
+                    "m_lvEntries", true)[0] as ListView);
+                if (lv == null) { Debug.Assert(false); return; }
+
+                int topIndex = lv.TopItem.Index;
+
+                if (!_highlightsOn)
                 {
                     _host.MainWindow.RefreshEntriesList();
                 }
 
                 _host.MainWindow.UpdateUI(false, null, false, null, true, null, false);
+
+                //Reset scroll position of the list.
+                lv.TopItem = lv.Items[topIndex];
             }
         }
 
