@@ -1,6 +1,6 @@
 # QualityHighlighter
 QualityHighlighter plugin for KeePass 2.x.
-Copyright (C) 2016 by Scott Richter (scott.d.richter at gmail.com)
+Copyright (C) 2016-2017 by Scott Richter (scott.d.richter at gmail.com)
 
 Modified by jaege.
 
@@ -28,6 +28,8 @@ This plugin pairs very well with the QualityColumn plugin available on the KeePa
 QualityHighlighter is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
 ## Version History
+
+v1.3: Fixed issues #1, #4, and #5. Now compatible with TrayTOTP. No longer scrolls the window when toggling state. 0-bit entries use white background color.
 
 v1.2: Added saving of highlighting toggle state. It will not persist after closing and reopening KeePass. Fixed issue with highlighting being wrong on entries where the password is a reference to another password.
 
