@@ -25,18 +25,18 @@ This plugin pairs very well with the QualityColumn plugin available on the KeePa
 
 ### Installation
 
-Copy [QualityHighlighter.plgx](https://github.com/sdrichter/QualityHighlighter/releases/latest/download/QualityHighlighter.plgx) to the KeePass Plugins directory or install via [Chocolatey](https://community.chocolatey.org/packages/keepass-plugin-qualitycolumn#install):
+Copy [QualityHighlighter.plgx](https://github.com/sdrichter/QualityHighlighter/releases/latest/download/QualityHighlighter.plgx) to the KeePass Plugins directory or install via [Chocolatey](https://community.chocolatey.org/packages/keepass-plugin-qualityhighlighter#install):
 
 ```
-cinst keepass-plugin-qualitycolumn
+cinst keepass-plugin-qualityhighlighter
 ```
 
 ### Upgrade
 
-Overwrite [QualityHighlighter.plgx](https://github.com/sdrichter/QualityHighlighter/releases/latest/download/QualityHighlighter.plgx) inside the KeePass Plugins directory or upgrade automated via [Chocolatey](https://community.chocolatey.org/packages/keepass-plugin-qualitycolumn#upgrade):
+Overwrite [QualityHighlighter.plgx](https://github.com/sdrichter/QualityHighlighter/releases/latest/download/QualityHighlighter.plgx) inside the KeePass Plugins directory or upgrade automated via [Chocolatey](https://community.chocolatey.org/packages/keepass-plugin-qualityhighlighter#upgrade):
 
 ```
-cup keepass-plugin-qualitycolumn
+cup keepass-plugin-qualityhighlighter
 ```
 
 ## License
