@@ -23,6 +23,19 @@ This plugin pairs very well with the QualityColumn plugin available on the KeePa
 
 ![Example Screenshot](example.png)
 
+#### Installation via Chocolatey 📦 
+Or you can [use Chocolatey to install](https://community.chocolatey.org/packages/keepass-plugin-qualityhighlighter#install) it in a more automated manner:
+
+```
+choco install keepass-plugin-qualityhighlighter
+```
+
+To [upgrade KeePass Plugin QualityHighlighter](https://community.chocolatey.org/packages/keepass-plugin-qualityhighlighter#upgrade) to the [latest release version](https://community.chocolatey.org/packages/keepass-plugin-qualityhighlighter#versionhistory) for enjoying the newest features, run the following command from the command line or from PowerShell:
+
+```
+choco upgrade keepass-plugin-qualityhighlighter
+```
+
 ## License
 
 QualityHighlighter is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
